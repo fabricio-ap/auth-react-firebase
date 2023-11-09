@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { AuthContext } from '../context';
-import { Home, Login } from '../pages';
+import { Home, Login, SignUp } from '../pages';
 import { ProtectedRoute } from './Protected';
 
 export function Router() {
@@ -21,6 +21,10 @@ export function Router() {
     {
       path: '/login',
       element: <Login />,
+    },
+    {
+      path: '/sign-up',
+      element: <SignUp />,
     },
   ]);
 

@@ -1,4 +1,9 @@
-import { User, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  User,
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 import { createContext, useMemo, useState } from 'react';
 import { firebaseApp } from '../services/firebaseConfig';
 
@@ -9,6 +14,7 @@ interface AuthProviderProps {
 type AuthContextType = {
   user?: User;
   signed: boolean;
+  signUp: (email: string, password: string, callback: () => void) => void;
   signIn: (email: string, password: string, callback: () => void) => void;
   signOut: () => void;
 };
@@ -16,6 +22,7 @@ type AuthContextType = {
 const initialState = {
   user: undefined,
   signed: false,
+  signUp: () => undefined,
   signIn: () => undefined,
   signOut: () => undefined,
 };
@@ -26,6 +33,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | undefined>(undefined);
 
   const auth = getAuth(firebaseApp);
+
+  const signUp = (email: string, password: string, callback: () => void) =>
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+
+        console.log({ user });
+        callback && callback();
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.log({ errorCode, errorMessage });
+      });
 
   const signIn = (email: string, password: string, callback: () => void) =>
     signInWithEmailAndPassword(auth, email, password)
@@ -49,6 +71,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     () => ({
       user,
       signed: !!user,
+      signUp,
       signIn,
       signOut,
     }),

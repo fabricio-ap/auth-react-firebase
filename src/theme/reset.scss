@@ -130,14 +130,30 @@ table {
 }
 
 html,
-body {
+body,
+#root {
   width: 100%;
   height: 100%;
   overflow: auto;
   font-family: 'Nunito', sans-serif;
 }
 
-#root {
-  height: 100%;
-  width: 100%;
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+  padding: 2px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #dcdfe3;
+  border-radius: 5px;
+
+  &:hover {
+    background: #cdd0d4;
+  }
 }

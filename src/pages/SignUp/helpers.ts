@@ -14,5 +14,16 @@ export function buildFormConfig() {
       fullWidth: true,
       required: true,
     },
+    {
+      id: 'confirm',
+      label: 'Confirme sua senha',
+      type: 'password',
+      fullWidth: true,
+      required: true,
+    },
   ];
+}
+
+export function validatePassword(password: string, confirm: string) {
+  return password === confirm;
 }

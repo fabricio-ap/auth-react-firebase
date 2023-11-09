@@ -2,24 +2,21 @@ import { ChangeEvent } from 'react';
 import { Button, Input } from '..';
 import styles from './Form.module.scss';
 
-export enum InputType {
-  EMAIL = 'email',
-  PASSWORD = 'password',
-  TEXT = 'text',
-}
+export type FormItemType = {
+  label?: string;
+  type?: 'email' | 'password' | 'text';
+  fullWidth?: boolean;
+  required?: boolean;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+};
 
 interface FormProps {
-  items: {
-    label?: string;
-    type?: InputType;
-    fullWidth?: boolean;
-    required?: boolean;
-    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  }[];
+  items: FormItemType[];
+  submitText?: string;
   onSubmit?: () => void;
 }
 
-export function Form({ items, onSubmit }: FormProps) {
+export function Form({ items, submitText, onSubmit }: FormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit && onSubmit();
@@ -31,7 +28,7 @@ export function Form({ items, onSubmit }: FormProps) {
         <Input key={index} {...item} />
       ))}
 
-      <Button label='Entrar' color='#DC7E40' type='submit' fullWidth />
+      <Button label={submitText} color='#DC7E40' type='submit' fullWidth />
     </form>
   );
 }

@@ -1,3 +1,4 @@
+import { Link as RouterLink } from 'react-router-dom';
 import styles from './Link.module.scss';
 
 interface LinkProps {
@@ -7,8 +8,8 @@ interface LinkProps {
 
 export function Link({ text, to }: LinkProps) {
   return (
-    <a href={to} className={styles.link}>
+    <RouterLink to={to || ''} className={styles.link}>
       {text}
-    </a>
+    </RouterLink>
   );
 }
