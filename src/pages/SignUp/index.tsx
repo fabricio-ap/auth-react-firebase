@@ -11,13 +11,14 @@ export function SignUp() {
     email: '',
     password: '',
     confirm: '',
+    firstName: '',
+    lastName: '',
   });
 
-  const { signUp } = useContext(AuthContext);
-
-  const navigate = useNavigate();
-
   const [isValid, setIsValid] = useState(true);
+
+  const { signUp } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [target.id]: target.value });
@@ -28,7 +29,7 @@ export function SignUp() {
 
     if (!isValidPassword) return setIsValid(isValidPassword);
 
-    signUp(user.email, user.password, redirect);
+    signUp(user, redirect);
   };
 
   const redirect = () => {

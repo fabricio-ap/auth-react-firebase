@@ -1,11 +1,13 @@
 import {
+  AuthError,
   User,
   createUserWithEmailAndPassword,
-  getAuth,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { createContext, useMemo, useState } from 'react';
-import { firebaseApp } from '../services/firebaseConfig';
+import { auth, db } from '../services/firebaseConfig';
+import { AuthUserType } from '../types/user';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -14,8 +16,8 @@ interface AuthProviderProps {
 type AuthContextType = {
   user?: User;
   signed: boolean;
-  signUp: (email: string, password: string, callback: () => void) => void;
-  signIn: (email: string, password: string, callback: () => void) => void;
+  signUp: (data: AuthUserType, callback: () => void) => void;
+  signIn: (data: AuthUserType, callback: () => void) => void;
   signOut: () => void;
 };
 
@@ -32,36 +34,39 @@ export const AuthContext = createContext<AuthContextType>(initialState);
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | undefined>(undefined);
 
-  const auth = getAuth(firebaseApp);
+  const signUp = async (data: AuthUserType, callback: () => void) => {
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      const user = userCredentials.user;
 
-  const signUp = (email: string, password: string, callback: () => void) =>
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
+      const usersDoc = doc(db, 'users', String(user.uid));
 
-        console.log({ user });
-        callback && callback();
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        console.log({ errorCode, errorMessage });
+      await setDoc(usersDoc, {
+        id: user?.uid,
+        email: user?.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        provider: 'firebase',
       });
 
-  const signIn = (email: string, password: string, callback: () => void) =>
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const loggedUser = userCredential.user;
-        setUser(loggedUser);
-        callback && callback();
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+      callback && callback();
+    } catch (error) {
+      const _error = error as AuthError;
+      console.error({ _error });
+    }
+  };
 
-        console.log({ errorCode, errorMessage });
-      });
+  const signIn = async (data: AuthUserType, callback: () => void) => {
+    try {
+      const userCredentials = await signInWithEmailAndPassword(auth, data.email, data.password);
+      const loggedUser = userCredentials.user;
+      setUser(loggedUser);
+      callback && callback();
+    } catch (error) {
+      const _error = error as AuthError;
+      console.error({ _error });
+    }
+  };
 
   const signOut = () => {
     setUser(undefined);

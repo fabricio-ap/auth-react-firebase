@@ -8,7 +8,7 @@ import styles from './Login.module.scss';
 import { buildFormConfig } from './helpers';
 
 export function Login() {
-  const [login, setLogin] = useState({
+  const [user, setLogin] = useState({
     email: '',
     password: '',
   });
@@ -18,11 +18,11 @@ export function Login() {
   const navigate = useNavigate();
 
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    setLogin({ ...login, [target.id]: target.value });
+    setLogin({ ...user, [target.id]: target.value });
   };
 
   const handleSubmit = async () => {
-    signIn(login.email, login.password, redirect);
+    signIn(user, redirect);
   };
 
   const redirect = () => {
@@ -33,7 +33,7 @@ export function Login() {
 
   const formItems = formConfig.map((item) => ({
     ...item,
-    value: login[item.id as keyof typeof login],
+    value: user[item.id as keyof typeof user],
     onChange: handleChange,
   })) as FormItemType[];
 

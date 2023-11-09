@@ -1,4 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { Layout } from '../../pages';
 
 interface ProtectedRouteProps {
   signed: boolean;
@@ -7,5 +8,9 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ signed }: ProtectedRouteProps) {
   if (!signed) return <Navigate to='/login' />;
 
-  return <Outlet />;
+  return (
+    <Layout>
+      <Outlet />
+    </Layout>
+  );
 }
