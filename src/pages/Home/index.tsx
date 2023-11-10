@@ -8,6 +8,7 @@ import styles from './Home.module.scss';
 
 export function Home() {
   const [profile, setProfile] = useState<ProfileType | null>(null);
+
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -28,9 +29,9 @@ export function Home() {
           <Card>
             <ul className={styles.profile}>
               <li className={styles.profile__item}>
-                Nome: {profile.firstName} {profile.lastName}
+                {profile.firstName} {profile.lastName}
               </li>
-              <li className={styles.profile__item}>Email: {profile.email}</li>
+              <li className={styles.profile__item}>{profile.email}</li>
             </ul>
           </Card>
         </div>
