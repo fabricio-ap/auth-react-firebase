@@ -3,7 +3,7 @@ import styles from './Alert.module.scss';
 
 interface AlertProps {
   message?: string;
-  type: 'success' | 'warning';
+  type: 'success' | 'warning' | 'error';
 }
 
 export function Alert({ message, type = 'success' }: AlertProps) {

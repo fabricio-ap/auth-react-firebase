@@ -5,3 +5,4 @@ export * from './Divider';
 export * from './Form';
 export * from './Input';
 export * from './Link';
+export * from './Loading';

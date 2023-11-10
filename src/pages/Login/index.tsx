@@ -1,41 +1,13 @@
-import { ChangeEvent, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 import image from '../../assets/banner.png';
-import { Divider, Form, FormItemType, Link } from '../../components';
+import { Divider, Link, Loading } from '../../components';
 import { AuthContext } from '../../context';
+import { Auth } from './Auth';
 import { CustomAuth } from './CustomAuth';
 import styles from './Login.module.scss';
-import { buildFormConfig } from './helpers';
 
 export function Login() {
-  const [user, setLogin] = useState({
-    email: '',
-    password: '',
-  });
-
-  const { signIn } = useContext(AuthContext);
-
-  const navigate = useNavigate();
-
-  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    setLogin({ ...user, [target.id]: target.value });
-  };
-
-  const handleSubmit = async () => {
-    signIn(user, redirect);
-  };
-
-  const redirect = () => {
-    navigate('/');
-  };
-
-  const formConfig = buildFormConfig();
-
-  const formItems = formConfig.map((item) => ({
-    ...item,
-    value: user[item.id as keyof typeof user],
-    onChange: handleChange,
-  })) as FormItemType[];
+  const { isLoading } = useContext(AuthContext);
 
   return (
     <div className={styles.login}>
@@ -46,19 +18,19 @@ export function Login() {
             <p className={styles.login__text}>Faça login para utilizar nossos serviços</p>
           </div>
 
-          <CustomAuth />
+          {isLoading && <Loading />}
 
-          <Divider text='ou' />
+          {!isLoading && (
+            <>
+              <CustomAuth />
+              <Divider text='ou' />
+              <Auth />
 
-          <Form items={formItems} submitText='Entrar' onSubmit={handleSubmit} />
-
-          <p className={styles.login__text}>
-            <Link text='Esqueci minha senha' />
-          </p>
-
-          <p className={styles.login__text}>
-            Ainda não tem uma conta? <Link text='Criar conta' to='/sign-up' />
-          </p>
+              <p className={styles.login__text}>
+                Ainda não tem uma conta? <Link text='Criar conta' to='/sign-up' />
+              </p>
+            </>
+          )}
         </div>
 
         <img src={image} className={styles.login__banner} />

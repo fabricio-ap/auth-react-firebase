@@ -1,49 +1,12 @@
-import { ChangeEvent, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 import image from '../../assets/banner.png';
-import { Alert, Form, FormItemType, Link } from '../../components';
+import { Loading } from '../../components';
 import { AuthContext } from '../../context';
+import { Auth } from './Auth';
 import styles from './SignUp.module.scss';
-import { buildFormConfig, validatePassword } from './helpers';
 
 export function SignUp() {
-  const [user, setUser] = useState({
-    email: '',
-    password: '',
-    confirm: '',
-    firstName: '',
-    lastName: '',
-  });
-
-  const [isValid, setIsValid] = useState(true);
-
-  const { signUp } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    setUser({ ...user, [target.id]: target.value });
-  };
-
-  const handleSubmit = () => {
-    const isValidPassword = validatePassword(user.password, user.confirm);
-
-    if (!isValidPassword) return setIsValid(isValidPassword);
-
-    signUp(user, redirect);
-  };
-
-  const redirect = () => {
-    setIsValid(true);
-    navigate('/login');
-  };
-
-  const formConfig = buildFormConfig();
-
-  const formItems = formConfig.map((item) => ({
-    ...item,
-    value: user[item.id as keyof typeof user],
-    onChange: handleChange,
-  })) as FormItemType[];
+  const { isLoading } = useContext(AuthContext);
 
   return (
     <div className={styles.signup}>
@@ -58,15 +21,9 @@ export function SignUp() {
             </p>
           </div>
 
-          {!isValid && (
-            <Alert message='A confirmação da senha está diferente da senha' type='warning' />
-          )}
+          {isLoading && <Loading />}
 
-          <Form items={formItems} submitText='Cadastrar' onSubmit={handleSubmit} />
-
-          <p className={styles.signup__text}>
-            Já tem uma conta? <Link text='Entrar na minha conta' to='/login' />
-          </p>
+          {!isLoading && <Auth />}
         </div>
       </div>
     </div>
