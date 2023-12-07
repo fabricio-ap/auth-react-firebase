@@ -4,9 +4,11 @@ import './theme/reset.scss';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router />
-    </AuthProvider>
+    <div className='text-neutral text-sm h-full'>
+      <AuthProvider>
+        <Router />
+      </AuthProvider>
+    </div>
   );
 }
 

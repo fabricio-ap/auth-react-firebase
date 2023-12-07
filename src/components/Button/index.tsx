@@ -1,27 +1,49 @@
 import classNames from 'classnames';
+import { ReactNode } from 'react';
 import styles from './Button.module.scss';
 
+enum ButtonColor {
+  primary = 'bg-primary',
+  secondary = 'bg-secondary',
+  ghost = 'bg-ghost',
+}
+
 interface ButtonProps {
-  label?: string;
+  children?: ReactNode;
   type?: 'button' | 'submit';
-  prefix?: string | React.ReactNode;
-  color?: string;
+  icon?: ReactNode;
+  color?: 'primary' | 'secondary' | 'ghost';
   fullWidth?: boolean;
   onClick?: () => void;
 }
 
-export function Button({ label, prefix, type, color, fullWidth, onClick }: ButtonProps) {
-  const className = classNames(styles.button, [{ [styles['button--full-width']]: fullWidth }]);
+export function Button({
+  children,
+  type = 'button',
+  color = 'ghost',
+  icon,
+  fullWidth,
+  onClick,
+}: ButtonProps) {
+  const className = classNames(
+    styles.button,
+    'flex align-center',
+    'justify-center',
+    'px-3 py-1.5',
+    'rounded-lg',
+    'border border-border',
+    'ease-in-out duration-300',
+    {
+      ['w-full']: fullWidth,
+      [ButtonColor[color]]: color,
+      [`text-onPrimary`]: color === 'primary',
+    },
+  );
 
   return (
-    <button
-      className={className}
-      type={type || 'button'}
-      onClick={onClick}
-      style={{ background: color || '#FFFFFF', color: color && '#FFFFFF' }}
-    >
-      {prefix && <div className={styles.button__prefix}>{prefix}</div>}
-      {label && <div>{label}</div>}
+    <button className={className} type={type} onClick={onClick}>
+      {icon}
+      {children}
     </button>
   );
 }
