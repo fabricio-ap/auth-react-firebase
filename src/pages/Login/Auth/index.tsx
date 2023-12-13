@@ -1,8 +1,6 @@
-import { ChangeEvent, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Alert, Form, FormItemType, Link } from '../../../components';
+import { ChangeEvent, FormEvent, useContext, useState } from 'react';
+import { Alert, Button, Input } from '../../../components';
 import { AuthContext } from '../../../context';
-import { buildFormConfig } from '../helpers';
 import styles from './Auth.module.scss';
 
 export function Auth() {
@@ -11,39 +9,50 @@ export function Auth() {
     password: '',
   });
 
-  const { error, signIn } = useContext(AuthContext);
-
-  const navigate = useNavigate();
+  const { error, isLoading, signIn } = useContext(AuthContext);
 
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setLogin({ ...user, [target.id]: target.value });
   };
 
-  const handleSubmit = async () => {
-    signIn(user, redirect);
+  const handleSubmit = (event: FormEvent) => {
+    signIn(user);
+    event.preventDefault();
   };
-
-  const redirect = () => {
-    navigate('/');
-  };
-
-  const formConfig = buildFormConfig();
-
-  const formItems = formConfig.map((item) => ({
-    ...item,
-    value: user[item.id as keyof typeof user],
-    onChange: handleChange,
-  })) as FormItemType[];
 
   return (
     <>
-      {error && error.type === 'SIGN-IN' && <Alert message={error.message} type='error' />}
+      {error && <Alert type='error'>{error.message}</Alert>}
 
-      <Form items={formItems} submitText='Entrar' onSubmit={handleSubmit} />
+      <form className={styles.auth} onSubmit={handleSubmit}>
+        <Input
+          id='email'
+          label='E-mail'
+          placeholder='Digite seu e-mail'
+          type='email'
+          value={user.email}
+          required
+          fullWidth
+          onChange={handleChange}
+        />
 
-      <p className={styles.auth__text}>
-        <Link text='Esqueci minha senha' />
-      </p>
+        <Input
+          id='password'
+          label='Senha'
+          placeholder='Digite sua senha'
+          type='password'
+          value={user.password}
+          required
+          fullWidth
+          onChange={handleChange}
+        />
+
+        <div className={styles.auth__submit}>
+          <Button type='submit' color='primary' disabled={isLoading} fullWidth>
+            Entrar
+          </Button>
+        </div>
+      </form>
     </>
   );
 }

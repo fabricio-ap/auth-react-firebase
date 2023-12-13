@@ -1,13 +1,20 @@
 import classNames from 'classnames';
+import { ReactNode } from 'react';
 import styles from './Alert.module.scss';
 
-interface AlertProps {
-  message?: string;
-  type: 'success' | 'warning' | 'error';
+enum AlertEnum {
+  success = 'alert--success',
+  warning = 'alert--warning',
+  error = 'alert--error',
 }
 
-export function Alert({ message, type = 'success' }: AlertProps) {
-  const className = classNames(styles.alert, styles[`alert--${type}`]);
+interface AlertProps {
+  children?: ReactNode;
+  type?: 'success' | 'warning' | 'error';
+}
 
-  return <div className={className}>{message}</div>;
+export function Alert({ children, type = 'success' }: AlertProps) {
+  const className = classNames(styles.alert, styles[AlertEnum[type]]);
+
+  return <div className={className}>{children}</div>;
 }

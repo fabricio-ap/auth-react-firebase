@@ -1,29 +1,24 @@
-import { useContext } from 'react';
-import image from '../../assets/banner.png';
-import { Loading } from '../../components';
-import { AuthContext } from '../../context';
+import { Link } from '../../components';
 import { Auth } from './Auth';
 import styles from './SignUp.module.scss';
 
 export function SignUp() {
-  const { isLoading } = useContext(AuthContext);
-
   return (
     <div className={styles.signup}>
       <div className={styles.signup__wrapper}>
-        <img src={image} className={styles.signup__banner} />
-
         <div className={styles.signup__container}>
-          <div className={styles.signup__section}>
-            <h4 className={styles.signup__title}>Olá!</h4>
-            <p className={styles.signup__text}>
-              Crie uma conta e descubra um mundo novo com as nossas ferramentas
+          <div>
+            <h4 className={styles.signup__title}>Novo por aqui?</h4>
+            <p className={styles.signup__subtitle}>
+              Faça seu cadastro para utilizar nossos serviços
             </p>
           </div>
 
-          {isLoading && <Loading />}
+          <Auth />
 
-          {!isLoading && <Auth />}
+          <p>
+            Já tem uma conta? <Link to='/auth/sign-in'>Entrar</Link>
+          </p>
         </div>
       </div>
     </div>

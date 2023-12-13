@@ -20,7 +20,7 @@ export type ErrorType = {
 };
 
 export enum ErrorMessage {
-  'auth/invalid-login-credentials' = 'Usuário ou senha inválidos',
+  'auth/invalid-credential' = 'Usuário ou senha inválidos',
   'auth/invalid-email' = 'Email invalido',
   'auth/weak-password' = 'A senha deve conter pelo menos 6 caracteres',
 }

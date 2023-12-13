@@ -1,10 +1,11 @@
-import { useContext } from 'react';
+import { ReactNode, useContext } from 'react';
 import { PiSignOutBold } from 'react-icons/pi';
+import { Button } from '..';
 import { AuthContext } from '../../context';
 import styles from './Layout.module.scss';
 
 interface LayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function Layout({ children }: LayoutProps) {
@@ -16,7 +17,7 @@ export function Layout({ children }: LayoutProps) {
         <h3 className={styles.header__title}>Auth React Firebase</h3>
 
         <div className={styles.header__actions}>
-          <PiSignOutBold className={styles.header__action} onClick={signOut} />
+          <Button icon={<PiSignOutBold />} onClick={signOut} />
         </div>
       </header>
 

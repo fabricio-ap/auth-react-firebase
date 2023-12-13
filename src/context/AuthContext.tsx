@@ -19,7 +19,7 @@ type AuthContextType = {
   isLoading: boolean;
   error?: ErrorType;
   signUp: (data: SignUpType, callback: () => void) => void;
-  signIn: (data: SignInType, callback: () => void) => void;
+  signIn: (data: SignInType) => void;
   signOut: () => void;
 };
 
@@ -60,8 +60,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       setIsLoading(false);
       callback && callback();
-    } catch (error) {
-      const _error = error as AuthError;
+    } catch (err) {
+      const _error = err as AuthError;
 
       setIsLoading(false);
       setError({
@@ -71,7 +71,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const signIn = async (data: SignInType, callback: () => void) => {
+  const signIn = async (data: SignInType) => {
     setIsLoading(true);
 
     try {
@@ -80,11 +80,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(loggedUser);
 
       setIsLoading(false);
-      callback && callback();
-    } catch (error) {
-      const _error = error as AuthError;
+    } catch (err) {
+      const _error = err as AuthError;
 
       setIsLoading(false);
+
       setError({
         type: 'SIGN-IN',
         message: ErrorMessage[_error.code as keyof typeof ErrorMessage] || _error.message,
